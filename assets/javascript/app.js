@@ -1,6 +1,4 @@
-
-
- var memes = [];
+var memes = [];
 
       // displayMovieInfo function re-renders the HTML to display the appropriate content
       function displayMeme() {
@@ -22,30 +20,29 @@
 
         	var memeDiv = $("<div class='memeDiv'>");
           
+
+          // loop over each image object in the results array
+          for ( var i = 0; i < results.length; i++ ) {
+            var memeImg = $("<img>");
+            memeImg.attr({
+              // set initial source to the still image and set other attributes to
+              // store the urls for the still (paused) and animated images as well
+              // as the current state
+              'src': results[i].images.fixed_height_still.url,
+              'data-still': results[i].images.fixed_height_still.url,
+              'data-animated': results[i].images.fixed_height.url,
+              'data-state': 'still'
+            });
+            memeDiv.append(memeImg);
+          }
+
+           
           
-          var memeImg = $("<img>");
-          memeImg.attr("src", results.images.fixed_height.url);
-          
-          memeDiv.append(memeImg);
+          // --------------------------------------------------------
+
           $("#meme-display").prepend(memeDiv);
-          // Storing the rating data
-   //        var rating = response.rating;
 
-   //        // Creating an element to have the rating displayed
-   //        var pOne = $("<p>").text("Rating: " + rating);
-
-   //        // Displaying the rating
-   //        memeDiv.append(pOne);
-
-			// var memeImg = $("<img>");
-   //        // Retrieving the URL for the gif
-   //       memeImg.attr("src", results[i].images.fixed_height.url);
-
-   //        // Appending the image
-   //        memeDiv.append(memeImg);
-
-   //        Putting the entire movie above the previous movies
-   //        $(".displayMeme").prepend(memeDiv);
+ 
         });
 
       }
@@ -94,3 +91,18 @@
 
       // Calling the renderButtons function to display the intial buttons
       renderButtons();
+
+	$("memeImg").on("click", function() {
+      // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+      var state = $(this).attr("data-state");
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      // Else set src to the data-still value
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
