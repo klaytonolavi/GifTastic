@@ -1,10 +1,12 @@
+
+
  var memes = [];
 
       // displayMovieInfo function re-renders the HTML to display the appropriate content
       function displayMeme() {
 
         var meme = $(this).attr("data-name");
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + meme + "&api_key=d7cb41b658e34e0ab32378cc92cee4a6";
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + meme + "&api_key=d7cb41b658e34e0ab32378cc92cee4a6&limit=5";
 
         // Creating an AJAX call for the specific movie button being clicked
         $.ajax({
@@ -13,30 +15,37 @@
         }).done(function(response) {
 
         	console.log(response);
+
+        var results = response.data;
           // Creating a div to hold the movie
-          var memeDiv = $("<div class='displayMeme'>");
+          // var memeDiv = $("<div class='displayMeme'>");
 
+        	var memeDiv = $("<div class='memeDiv'>");
+          
+          
+          var memeImg = $("<img>");
+          memeImg.attr("src", results.images.fixed_height.url);
+          
+          memeDiv.append(memeImg);
+          $("#meme-display").prepend(memeDiv);
           // Storing the rating data
-          var rating = response.rating;
+   //        var rating = response.rating;
 
-          // Creating an element to have the rating displayed
-          var pOne = $("<p>").text("Rating: " + rating);
+   //        // Creating an element to have the rating displayed
+   //        var pOne = $("<p>").text("Rating: " + rating);
 
-          // Displaying the rating
-          memeDiv.append(pOne);
+   //        // Displaying the rating
+   //        memeDiv.append(pOne);
 
+			// var memeImg = $("<img>");
+   //        // Retrieving the URL for the gif
+   //       memeImg.attr("src", results[i].images.fixed_height.url);
 
-          // Retrieving the URL for the gif
-          var imgURL = response.images.fixed_height_still;
+   //        // Appending the image
+   //        memeDiv.append(memeImg);
 
-          // Creating an element to hold the image
-          var image = $("<img>").attr("src", imgURL);
-
-          // Appending the image
-          memeDiv.append(image);
-
-          // Putting the entire movie above the previous movies
-          $(".displayMeme").prepend(memeDiv);
+   //        Putting the entire movie above the previous movies
+   //        $(".displayMeme").prepend(memeDiv);
         });
 
       }
@@ -46,7 +55,7 @@
 
         // Deleting the movies prior to adding new movies
         // (this is necessary otherwise you will have repeat buttons)
-        $(".buttons-view").empty();
+        $("#buttons-view").empty();
 
         // Looping through the array of movies
         for (var i = 0; i < memes.length; i++) {
@@ -61,7 +70,7 @@
           // Providing the initial button text
           a.text(memes[i]);
           // Adding the button to the buttons-view div
-          $(".buttons-view").append(a);
+          $("#buttons-view").append(a);
         }
       }
 
@@ -76,10 +85,12 @@
 
         // Calling renderButtons which handles the processing of our movie array
         renderButtons();
+
+		
       });
 
       // Adding a click event listener to all elements with a class of "movie"
-      $(document).on("click", ".movie", displayMeme);
+      $(document).on("click", ".meme", displayMeme);
 
       // Calling the renderButtons function to display the intial buttons
       renderButtons();
